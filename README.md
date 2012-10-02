@@ -1,5 +1,5 @@
-fortunes-kn
-===========
+fortunes-kn-gaadegalu
+=====================
 
 Kannada Fortunes Cookies
 
