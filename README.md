@@ -3,8 +3,7 @@ Kannada Fortunes Cookies
 
 To Create Fortune Database
 --------------------------
-1. Add one Gaade per line. 
-2. To create fortune cookies file for Gaadegalu, run
+Add one Gaade per line to gaadegalu.txt and run following command
 
     make
 
