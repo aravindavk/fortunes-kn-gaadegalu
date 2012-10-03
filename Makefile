@@ -1,27 +1,33 @@
-default:
-	rm -rf gaadegalu
-	touch gaadegalu
-	while read line; do echo $$line >> gaadegalu; echo '%' >> gaadegalu; done < gaadegalu.txt
-	strfile gaadegalu gaadegalu.dat
-fortune:
-	rm -rf gaadegalu
-	touch gaadegalu
-	while read line; do echo $$line >> gaadegalu; echo '%' >> gaadegalu; done < gaadegalu.txt
-	strfile gaadegalu gaadegalu.dat
-php:
-	rm -rf gaadegalu.php
-	touch gaadegalu.php
-	echo '<?php' >> gaadegalu.php
-	echo '$$gaadegalu = Array(' >> gaadegalu.php
-	while read line; do echo '"'$$line'", ' >> gaadegalu.php; done < gaadegalu.txt
-	echo ');' >> gaadegalu.php
-json:
-	rm -rf temp.json gaadegalu.json
-	touch temp.json
+#!/usr/bin/make -f
+
+binaries = fortune-mod
+fortune-mod = /usr/bin/strfile
+file-exists = $(if $(wildcard $(firstword $($1))),,$(error Please install $1: aptitude instal $1))
+quotes-file = gaadegalu
+
+all: prep clean fortune
+
+prep: $(binaries)
+
+$(binaries):
+	$(call file-exists,$@)
+
+fortune: 
+	while read line; do echo $$line >> gaadegalu; echo '%' >> $(quotes-file); done < $(quotes-file).txt
+	strfile $(quotes-file) $(quotes-file).dat
+
+php: clean $(quotes-file)
+	echo '<?php' >> $(quotes-file).php
+	echo '$$gaadegalu = Array(' >> $(quotes-file).php
+	while read line; do echo '"'$$line'", ' >> $(quotes-file).php; done < $(quotes-file).txt
+	echo ');' >> $(quotes-file).php
+
+json: clean
 	echo '[' >> temp.json
-	while read line; do echo '"'$$line'", ' >> temp.json; done < gaadegalu.txt
-	sed '$$ s/,\s$$//' temp.json > gaadegalu.json	
-	echo ']' >> gaadegalu.json
+	while read line; do echo '"'$$line'", ' >> temp.json; done < $(quotes-file).txt
+	sed '$$ s/,\s$$//' temp.json > $(quotes-file).json	
+	echo ']' >> $(quotes-file).json
 	rm -rf temp.json
+
 clean:
-	rm -rf gaadegalu.php gaadegalu.json gaadegalu.dat gaadegalu
+	-rm -rf $(quotes-file).php $(quotes-file).json $(quotes-file).dat $(quotes-file)
